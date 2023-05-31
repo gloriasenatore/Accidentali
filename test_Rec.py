@@ -5,6 +5,12 @@ import numpy as np
 from array import array 
 
 hist_pd=ROOT.TH2F("histo","E_delayed vs E_prompt",100, 0, 13, 100, 0, 14)
+hist_pos = ROOT.TH1F("histopos", "delta r", 100, 0, 2000)
+hist_time = ROOT.TH1F("histotime", "delta t", 100, 0, 200)
+hist_prompt = ROOT.TH1F("histoprompt", "E_prompt",200, 0, 14)
+hist_delayed = ROOT.TH1F("histodelayed", "E_delayed", 200, 0, 14)
+
+nEntriesTot = 0
 
 numFile = 40
 for k in range (0, numFile):
@@ -50,16 +56,27 @@ for k in range (0, numFile):
             y1=hist_y[0]
             z1=hist_z[0]
             r1 = (x1**2 + y1**2 + z1**2)**0.5
+            deltar = ((x0-x1)**2 +(y0-y1)**2 + (z0-z1)**2)**0.5
+            deltat = t1-t0
 
-            if ((t1-t0)<1e6 and abs(r0-r1) < 1500):
+            if (deltat < 1e6 and deltar <= 1500):
                     ind_prompt.append(t0)
                     ind_del.append(t1)
                     pe_prompt.append(p0)
                     pe_del.append(p1)
+
                     hist_pd.Fill(p1,p0)
+                    hist_time.Fill(t0)
+                    hist_pos.Fill(deltar)
+                    hist_prompt.Fill(p0)
+                    hist_delayed.Fill(p1)
                     i=i+2
             else:
                     i=i+1
+
+    nEntriesTot = nEntriesTot + nEntries
+
+print("Numero eventi in totale: "+str(nEntriesTot))
 
 c1 = ROOT.TCanvas("c1", "c1")
 #hist_pd.Fill(pe_prompt,pe_del)
@@ -67,5 +84,22 @@ hist_pd.GetXaxis().SetTitle("E_delayed [MeV]")
 hist_pd.GetYaxis().SetTitle("E_prompt [MeV]")
 hist_pd.SetStats(1)
 hist_pd.Draw("COLZ")
+"""
+c2 = ROOT.TCanvas("c2", "c2")
+hist_pos.GetXaxis().SetTitle("delta r [mm]")
+hist_pos.Draw()
+
+c3 = ROOT.TCanvas("c3", "c3")
+hist_time.GetXaxis().SetTitle("delta t [ns]")
+hist_time.Draw()
+"""
+c4 = ROOT.TCanvas("c4", "c4")
+hist_prompt.GetXaxis().SetTitle("E [MeV]")
+hist_prompt.Draw()
+
+c5 = ROOT.TCanvas("c5", "c5")
+hist_delayed.GetXaxis().SetTitle("E [MeV]")
+c5.SetLogy()
+hist_delayed.Draw()
 
 
