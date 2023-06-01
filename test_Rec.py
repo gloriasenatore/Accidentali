@@ -64,9 +64,9 @@ for k in range (0, numFile):
                     ind_del.append(t1)
                     pe_prompt.append(p0)
                     pe_del.append(p1)
-
+                    
                     hist_pd.Fill(p1,p0)
-                    hist_time.Fill(t0)
+                    hist_time.Fill(deltat)
                     hist_pos.Fill(deltar)
                     hist_prompt.Fill(p0)
                     hist_delayed.Fill(p1)
@@ -84,7 +84,7 @@ hist_pd.GetXaxis().SetTitle("E_delayed [MeV]")
 hist_pd.GetYaxis().SetTitle("E_prompt [MeV]")
 hist_pd.SetStats(1)
 hist_pd.Draw("COLZ")
-"""
+
 c2 = ROOT.TCanvas("c2", "c2")
 hist_pos.GetXaxis().SetTitle("delta r [mm]")
 hist_pos.Draw()
@@ -92,7 +92,7 @@ hist_pos.Draw()
 c3 = ROOT.TCanvas("c3", "c3")
 hist_time.GetXaxis().SetTitle("delta t [ns]")
 hist_time.Draw()
-"""
+
 c4 = ROOT.TCanvas("c4", "c4")
 hist_prompt.GetXaxis().SetTitle("E [MeV]")
 hist_prompt.Draw()
